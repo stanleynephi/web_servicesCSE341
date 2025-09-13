@@ -1,0 +1,18 @@
+{
+  "name": "web_services",
+  "version": "1.0.0",
+  "description": "Build robust backend service that is used by multiple devices to communicate between server and clients",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "author": "Nuley Stanley Nephi",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "mongodb": "^6.19.0",
+    "nodemon": "^3.1.10"
+  }
+}

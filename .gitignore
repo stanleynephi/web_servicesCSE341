@@ -1,0 +1,3 @@
+#ignore these files upon every commit made
+node_modules
+.env
