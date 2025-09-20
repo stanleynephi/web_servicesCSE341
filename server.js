@@ -5,6 +5,9 @@ const { run } = require("./database/index")
 const port = process.env.PORT || 8000
 const host = process.env.HOST
 
+//set up the express.json
+app.use(express.json())
+
 //app routing set-up
 app.use("/", require("./router"))
 
