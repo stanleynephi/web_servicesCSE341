@@ -1,6 +1,5 @@
 /**this handles the collections in our database */
-const express = require("express")
-const { run, client } = require("./index")
+const { client } = require("./index")
 const { ObjectId } = require("mongodb")
 
 /**funtion to connect to database and show all the collections available */
@@ -153,10 +152,10 @@ const updateContactInformation = async (collectionName, id, updatedData) => {
     }
     const updateContact = await collection.updateOne(filter, updatedata)
 
-  if (updateContact.matchedCount === 0) {
-    console.log(`No document found with id: ${id}`)
-    return null
-  }
+    if (updateContact.matchedCount === 0) {
+      console.log(`No document found with id: ${id}`)
+      return null
+    }
 
     console.log(`Data Updated Successfully`)
     return `Data updated successfully`

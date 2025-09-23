@@ -72,7 +72,13 @@ const DeleteContactbyId = async (req, res) => {
 //add contact to database
 const addContact = async (req, res) => {
   //retrieve needed data from the forms using body
-  const data = req.body
+  const data = {
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    email: req.body.email,
+    favouriteColor: req.body.favouriteColor,
+    birthday: req.body.birthday,
+  }
   console.log(data)
   if (!data) {
     console.log("No contact data found")
