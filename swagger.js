@@ -8,8 +8,8 @@ const doc = {
   },
   servers: [
     {
-      url: "http://localhost:8000", // by default: 'http://localhost:3000'
-      description: "API Description.", // by default: ''
+      url: "https://web-servicescse341.onrender.com",
+      description: "API Description",
     },
   ],
 }
