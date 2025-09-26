@@ -9,6 +9,10 @@
     {
       "url": "https://web-servicescse341.onrender.com",
       "description": "API Description"
+    },
+    {
+      "url": "http://localhost:8000/",
+      "description": "API Description"
     }
   ],
   "paths": {
@@ -78,6 +82,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         },
         "requestBody": {
@@ -122,8 +129,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "default": {
+            "description": ""
           }
         },
         "requestBody": {

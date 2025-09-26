@@ -61,7 +61,6 @@ const getCollectionDatabyId = async (collectionName, id) => {
   const data = await collection.findOne({ _id: objectId })
   if (!data) {
     console.log("No Contact Information Found")
-    return "No Contact Found"
   }
   return data
 }

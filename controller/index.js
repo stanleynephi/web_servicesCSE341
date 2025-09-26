@@ -1,8 +1,8 @@
 /**communicate with the database collection to query database using the listAllCollection funtion
  * to connect to the needed collection
  */
-
 const { ObjectId } = require("mongodb")
+const createError = require("http-errors")
 const {
   listAllCollection,
   getCollectionData,
@@ -13,23 +13,34 @@ const {
 } = require("../database/collection")
 
 //retrieve all data from the database
-const getAllContact = async (req, res) => {
-  const collection = await listAllCollection()
-  console.log(collection)
+const getAllContact = async (req, res, next) => {
+  try {
+    const collection = await listAllCollection()
+    console.log(collection)
 
-  //get all movie data from the collection
-  const contacts = await getCollectionData("contact_Infromation")
-  contacts.forEach((contact) => {
-    console.log(contact.firstname)
-  })
-  res.setHeader("Content-Type", "application/json")
-  res.status(200).json(contacts)
+    //get all movie data from the collection
+    const contacts = await getCollectionData("contact_Infromation")
 
-  return contacts
+    //set a conditional statement for when data is empty
+    if (!contacts) {
+      throw createError(404, "Nothing found in the database")
+    }
+
+    contacts.forEach((contact) => {
+      console.log(contact.firstname)
+    })
+    res.setHeader("Content-Type", "application/json")
+    res.status(200).json(contacts)
+
+    return contacts
+  } catch (error) {
+    console.log(error.message)
+    next(error.message)
+  }
 }
 
 //retrieve data by id.
-const RetrieveMoviebyId = async (req, res) => {
+const getContactbyId = async (req, res, next) => {
   try {
     const contact_Id = new ObjectId(req.params.id)
     console.log(contact_Id)
@@ -39,18 +50,31 @@ const RetrieveMoviebyId = async (req, res) => {
       "contact_Infromation",
       contact_Id
     )
+
+    //if there is nothing found then return a 404 error
+    if (!contact) {
+      //throw errow
+      throw createError(404, "No contact found, Check back later")
+    }
     //get the movies id and compare with the movieid
     //send response to json
     console.log(contact)
     res.status(200).json(contact)
     return contact
   } catch (error) {
-    console.log(error)
+    //check the instance of the error using mongodb
+    if (error.name === "BSONError") {
+      //thow the error
+      return next(
+        createError(400, "Invalid Product Id Oops Please check the Id")
+      )
+    }
+    next(error)
   }
 }
 
 //delete data by id
-const DeleteContactbyId = async (req, res) => {
+const DeleteContactbyId = async (req, res, next) => {
   //get the id needed
   try {
     const contact_Id = new ObjectId(req.params.id)
@@ -60,12 +84,19 @@ const DeleteContactbyId = async (req, res) => {
     const contact = await deleteDatabyId("contact_Infromation", contact_Id)
 
     if (!contact) {
-      console.log(`No contact found`)
+      throw createError(404, "No Contact Found")
     }
-
     res.status(200).json({ message: "Contact Deleted" })
   } catch (error) {
     console.log(error)
+    //check if the error is id based
+    if (error.name === "BSONError") {
+      //thow the error
+      return next(
+        createError(400, "Invalid Product Id Oops Please check the Id")
+      )
+    }
+    next(error)
   }
 }
 
@@ -99,12 +130,19 @@ const addContact = async (req, res) => {
 }
 
 //update the contact information
-const updateInformation = async (req, res) => {
+const updateInformation = async (req, res, next) => {
   //retrieve the accound id
   const contactId = new ObjectId(req.params.id)
-  console.log(contactId)
+  //check if the id exist
+  if (!contactId) {
+    throw createError(
+      404,
+      "Contact Not Found, Id does not match with any contact"
+    )
+  }
 
-  //retrieve data from the forms
+  //retrieve new data from the forms
+  //new data has been validated before being sent here
   const updateData = req.body
 
   //get existing data
@@ -150,18 +188,25 @@ const updateInformation = async (req, res) => {
     )
 
     if (!result) {
-      console.log(`Error with the update`)
-      return `Error with the update`
+      throw createError(404, "Contact Update Unsuccessful")
     }
 
-    res.status(200).json({ message: "Contact Updated" })
+    console.log(`Data inserted`)
+    res.status(200).json({ message: "Contact Updated Successfully" })
   } catch (error) {
     console.log(error)
+    if (error.name === "BSONError") {
+      //thow the error
+      return next(
+        createError(400, "Invalid Product Id Oops Please check the Id")
+      )
+    }
+    next(error)
   }
 }
 module.exports = {
   getAllContact,
-  RetrieveMoviebyId,
+  getContactbyId,
   DeleteContactbyId,
   addContact,
   updateInformation,

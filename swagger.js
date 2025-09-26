@@ -11,6 +11,10 @@ const doc = {
       url: "https://web-servicescse341.onrender.com",
       description: "API Description",
     },
+    {
+      url: "http://localhost:8000/",
+      description: "API Description",
+    },
   ],
 }
 

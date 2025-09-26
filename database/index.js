@@ -1,7 +1,7 @@
 /**create a client for the mongodb database */
-const env = require("dotenv").config()
+require("dotenv").config()
 
-const { MongoClient, ServerApiVersion, Admin } = require("mongodb")
+const { MongoClient, ServerApiVersion } = require("mongodb")
 const uri = process.env.MONGODBURI
 
 //create the client options for the connection
